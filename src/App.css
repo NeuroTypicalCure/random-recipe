@@ -1,0 +1,85 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  margin:0.4em auto;
+  padding: 1em;
+  width: 70%;
+  display: grid;
+  grid-template-areas:
+    "a a a"
+    "b c c";
+  border: 0.2em solid grey;
+  border-radius: 0.5em;
+}
+
+.card>span{
+  grid-area: a;
+  text-align: left;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: x-small;
+}
+
+.card>img {
+  grid-area: b;
+  width: 100pt;
+  height:100pt;
+  margin:auto;
+  object-fit: cover;
+  border-radius: 0.2em;
+}
+
+.card>.content{
+  grid-area:c;
+  padding: 0.2em 1em;
+  text-align: justify;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.title{
+  padding:0;
+  margin: 0;
+  text-decoration-line: underline;
+  font-size: large;
+}
+
+.description{
+  font-size:small;
+}
+
+
+.read-the-docs {
+  color: #888;
+}
