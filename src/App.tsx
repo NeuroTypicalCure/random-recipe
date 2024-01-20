@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import './App.css'
+import og_object from './types/og_object';
+import Recipe from './components/Recipe';
 
 // the og_object type refers to open graph protocol
-// TODO: delete recipes and delete full list then some styling, possible bugfixing and testing then it's done
+// TODO: delete recipes(check) and delete full list then some styling, possible bugfixing and testing then it's done
 
 function isNotOGP(o){
   return !(Object.keys(o).includes('og:title') && Object.keys(o).includes('og:description') && Object.keys(o).includes('og:site_name') && Object.keys(o).includes('og:image') && Object.keys(o).includes('og:url'))
@@ -18,9 +20,13 @@ function App() {
       'og:image': "https://www.allrecipes.com/thmb/e4oLL89vmtVFPEKc5ASymiTT5J4=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/2959475-a45bf98a7241486cb496149d13de5249.jpg"
     }
   ]);
-  const [currentRecipe,setCurrentRecipe] = useState<og_object>(null);
+  const [currentRecipe,setCurrentRecipe] = useState<og_object|null>(null);
   const [addRecipeInput, setAddRecipeInput] = useState<string>('');
-  const [previousNumber,setPreviousNumber] = useState<number>(null);
+  const [previousNumber,setPreviousNumber] = useState<number|null>(null);
+
+  const deleteItem = (item:og_object) => {
+    setRecipes(recipes.filter(e => item!==e));
+  } 
 
   const randomRecipe = () => {
     const r = getRandomNumberWithoutRepetition(0,(recipes.length-1));
@@ -56,37 +62,34 @@ function App() {
   }
 
   const renderCurrentRecipe = () => {
-    if (currentRecipe && Object.entries(currentRecipe).length === 1) {
-      return (
-        <div className='card'>
-          <div className='content'>
-            <a href={currentRecipe['og:url']}><h4 className='title'>{currentRecipe['og:url']}</h4></a>
-          </div>
-        </div>
-      );
-    } else if (currentRecipe) {
+      if (currentRecipe === null) {
+        return <div>Add recipes to list and press random</div>;
+      }
+
+      if (isNotOGP(currentRecipe)) {
         return (
-          <div className='card'>
-            <span>{currentRecipe['og:site_name']}</span>
-            <img src={currentRecipe['og:image']} alt={currentRecipe['og:title']} />
-            <div className='content'>
-              <a href={currentRecipe['og:url']}><h4 className='title'>{currentRecipe['og:title']}</h4></a>
-              <p className='description'>{currentRecipe['og:description']}</p>
-            </div>
-          </div>
+          <Recipe ogp={false} deleteItem={deleteItem} data={currentRecipe}/>
         );
-    } else {
-      return <div>Add recipes to list and press random</div>;
-    }
+      } else {
+        return (
+          <Recipe ogp={true} deleteItem={deleteItem} data={currentRecipe}/>
+        );
+      }
   };
+
+  const renderRandomButton = () => {
+    return (
+      <button style={{margin:"1em auto"}} onClick={randomRecipe}>random</button>
+    )
+  }
   
   return (
     <>
       <div style={{minHeight:"15em"}}>
-        {renderCurrentRecipe()}
+        {recipes&&renderCurrentRecipe()}
       </div>
       <br/>
-      <button style={{margin:"1em auto"}} onClick={randomRecipe}>random</button>
+        {recipes&&recipes.length>1&&renderRandomButton()}
       <br/>
       <br/>
       <br/>
@@ -95,55 +98,22 @@ function App() {
         <button style={{display:"inline", width:"9em"}} onClick={addRecipe}>add url to list</button>
       </div>
       <br/>
-      {recipes.map((e:og_object,n) => {
+      {recipes&&recipes.length>0&&recipes.map((e:og_object,n) => {
         if(isNotOGP(e)) {
           console.log('no ogp');
           return (<div key={n}>
-            <div className='card'>
-              <div className='content'>
-                <a href={e['og:url']}><h4 className='title'>{e['og:url']}</h4></a>
-              </div>
-            </div>
+            <Recipe ogp={false} deleteItem={deleteItem} data={e}/>
           </div>)
         }else{
-          return (<div key={n}>
-            <div className='card'>
-              <span>{e['og:site_name']}</span>
-              <img src={e['og:image']}/>
-              <div className='content'>
-                <a href={e['og:url']}><h4 className='title'>{e['og:title']}</h4></a>
-                <p className='description'>{e['og:description']}</p>
-              </div>
+          return (
+            <div key={n}>
+              <Recipe ogp={true} deleteItem={deleteItem} data={e}/>
             </div>
-          </div>)
+          )
         }
       })}
     </>
   )
 }
-
-type og_object = {
-  'og:title': string;
-  'og:type': string;
-  'og:image': string;
-  'og:url': string;
-  'og:description'?: string;
-  'og:site_name'?: string;
-  'og:determiner'?: string;
-  'og:locale'?: string;
-  'og:article_published_time'?: string; // ISO 8601 format
-  'og:article_modified_time'?: string; // ISO 8601 format
-  'og:article_author'?: string;
-  'og:video'?: string;
-  'og:video_secure_url'?: string;
-  'og:video_type'?: string;
-  'og:video_width'?: number;
-  'og:video_height'?: number;
-  'og:audio'?: string;
-  'og:audio_secure_url'?: string;
-  'og:audio_type'?: string;
-  'og:app_id'?: string;
-};
-
 
 export default App

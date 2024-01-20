@@ -1,0 +1,49 @@
+.card {
+  margin:0.4em auto;
+  padding: 1em;
+  width: 70%;
+  display: grid;
+  grid-template-areas:
+    "a a d"
+    "b c c";
+  border: 0.2em solid grey;
+  border-radius: 0.5em;
+}
+
+.card>span{
+  grid-area: a;
+  text-align: left;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: x-small;
+}
+
+.card>#delete{
+  grid-area: d;
+}
+
+.card>img {
+  grid-area: b;
+  width: 100pt;
+  height:100pt;
+  margin:auto;
+  object-fit: cover;
+  border-radius: 0.2em;
+}
+
+.card>.content{
+  grid-area:c;
+  padding: 0.2em 1em;
+  text-align: justify;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.title{
+  padding:0;
+  margin: 0;
+  text-decoration-line: underline;
+  font-size: large;
+}
+
+.description{
+  font-size:small;
+}
